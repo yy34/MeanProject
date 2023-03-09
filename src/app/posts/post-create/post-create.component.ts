@@ -9,9 +9,6 @@ import { PostsService } from '../post.service';
   styleUrls: ['./post-create.component.css'],
 })
 export class PostCreateComponent {
-  enteredTitle = '';
-  enteredContent = '';
-
   constructor(public postsService: PostsService) {}
 
   onAddPost(form: NgForm) {

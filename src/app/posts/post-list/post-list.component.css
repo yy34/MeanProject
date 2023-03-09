@@ -4,5 +4,12 @@
 }
 
 .info-text {
+  font-weight: 300;
+  text-transform: uppercase;
+  color: crimson;
+  margin-block: 5rem;
+  padding: 12px;
   text-align: center;
+  letter-spacing: 2px;
+  font-size: 12px;
 }
