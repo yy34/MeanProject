@@ -4,10 +4,11 @@ const mongoose = require("mongoose");
 const Post = require("./models/post");
 
 const app = express();
-
 mongoose
   .connect(
-    "mongodb+srv://yy3474:AtBfs3UnFwkcmXJN@cluster0.wnuno3b.mongodb.net/angular-db?retryWrites=true&w=majority"
+    "mongodb+srv://yy3474:" +
+      process.env.MONGO_ATLAS_PW +
+      "@cluster0.wnuno3b.mongodb.net/angular-db?retryWrites=true&w=majority"
   )
   .then(() => {
     console.log("MongoDB connection succeeded...");
