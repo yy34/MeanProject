@@ -1,4 +1,11 @@
-<mat-accordion multi="true" *ngIf="posts.length > 0">
+<div class="loading-wrapper" *ngIf="loading">
+  <mat-progress-spinner
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</div>
+
+<mat-accordion multi="true" *ngIf="posts.length > 0 && !loading">
   <mat-expansion-panel *ngFor="let post of posts">
     <mat-expansion-panel-header>
       {{ post.title }}
@@ -12,6 +19,6 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
-<div class="info-text mat-body-1" *ngIf="posts.length <= 0">
+<div class="info-text mat-body-1" *ngIf="posts.length <= 0 && !loading">
   No posts added...
 </div>

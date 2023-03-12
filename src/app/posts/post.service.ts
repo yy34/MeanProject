@@ -52,13 +52,18 @@ export class PostsService {
       .subscribe((responseData) => {
         post.id = responseData.postId;
         this.posts.push(post);
-        this.postsUpdated.next([...this.posts]);
+        this.getPostsNavigate();
       });
+  }
+  getPostsNavigate() {
+    this.postsUpdated.next([...this.posts]);
+    this.router.navigate(['/']);
   }
 
   updatePost(id: string, title: string, content: string) {
     const post: Post = { id: id, title: title, content: content };
     this.http.put('http://localhost:3000/api/posts/' + id, post);
+    this.getPostsNavigate();
   }
 
   deletePost(postId: string) {

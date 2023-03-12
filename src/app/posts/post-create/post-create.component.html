@@ -1,4 +1,11 @@
-<form (submit)="onSavePost(postForm)" #postForm="ngForm">
+<div class="loading-wrapper" *ngIf="loading">
+  <mat-progress-spinner
+    mode="indeterminate"
+    color="primary"
+  ></mat-progress-spinner>
+</div>
+
+<form (submit)="onSavePost(postForm)" #postForm="ngForm" *ngIf="!loading">
   <mat-card>
     <mat-form-field>
       <input

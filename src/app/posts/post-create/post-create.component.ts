@@ -14,6 +14,7 @@ export class PostCreateComponent implements OnInit {
   post: Post | any;
   mode = pageMode.create;
   postId: any;
+  loading: boolean = false;
   constructor(
     public postsService: PostsService,
     public route: ActivatedRoute
@@ -24,7 +25,9 @@ export class PostCreateComponent implements OnInit {
       if (mapParams.has('p_id')) {
         this.mode = pageMode.edit;
         this.postId = mapParams.get('p_id');
+        this.loading = true;
         this.postsService.getPost(this.postId).subscribe((postData) => {
+          this.loading = false;
           this.post = {
             id: postData._id,
             title: postData.title,
