@@ -5,34 +5,29 @@
   ></mat-progress-spinner>
 </div>
 
-<form (submit)="onSavePost(postForm)" #postForm="ngForm" *ngIf="!loading">
+<form [formGroup]="postForm" (submit)="onSavePost()" *ngIf="!loading">
   <mat-card>
     <mat-form-field>
       <input
         matInput
         type="text"
-        name="title"
         placeholder="Enter Title"
-        [ngModel]="post?.title"
-        required
-        minlength="1"
-        placeholder="Post Title"
-        #title="ngModel"
+        formControlName="title"
       />
-      <mat-error *ngIf="title.invalid">This field is required.</mat-error>
+      <mat-error *ngIf="postForm.get('title')?.invalid"
+        >This field is required.</mat-error
+      >
     </mat-form-field>
     <mat-form-field>
       <textarea
         matInput
-        rows="4"
-        name="content"
+        type="text"
         placeholder="Enter Content"
-        [ngModel]="post?.content"
-        required
-        placeholder="Post Content"
-        #content="ngModel"
+        formControlName="content"
       ></textarea>
-      <mat-error *ngIf="content.invalid">This field is required.</mat-error>
+      <mat-error *ngIf="postForm.get('content')?.invalid"
+        >This field is required.</mat-error
+      >
     </mat-form-field>
     <button mat-raised-button color="primary" type="submit">Save Post</button>
   </mat-card>
