@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { Subscription } from 'rxjs';
 
 import { Post } from '../post';
@@ -10,26 +11,43 @@ import { PostsService } from '../post.service';
   styleUrls: ['./post-list.component.css'],
 })
 export class PostListComponent implements OnInit, OnDestroy {
-  posts: Post[] = [];
   private postsSub: Subscription = new Subscription();
+  posts: Post[] = [];
   loading: boolean = false;
+  totalPosts: number = 0;
+  currentPage: number = 1;
+  tableSize: number = 7;
+  tableSizes: any = [5, 10, 25];
 
   constructor(public postsService: PostsService) {}
 
   ngOnInit() {
     this.loading = true;
-    this.postsService.getPosts();
+    this.getAllPost();
     this.postsSub = this.postsService
       .getPostUpdateListener()
-      .subscribe((posts: Post[]) => {
+      .subscribe((data: { posts: Post[]; allPostCount: number }) => {
         this.loading = false;
-        this.posts = posts;
+        this.totalPosts = data.allPostCount;
+        this.posts = data.posts;
       });
   }
-  deletePost(postId: string) {
-    this.postsService.deletePost(postId);
+  getAllPost() {
+    this.postsService.getPosts(this.tableSize, this.currentPage);
   }
 
+  deletePost(postId: string) {
+    this.loading = true;
+    this.postsService.deletePost(postId).subscribe(() => {
+      this.getAllPost();
+    });
+  }
+  onPageChanged(pageInfo: PageEvent) {
+    this.loading = true;
+    this.currentPage = pageInfo.pageIndex + 1;
+    this.tableSize = pageInfo.pageSize;
+    this.getAllPost();
+  }
   ngOnDestroy() {
     this.postsSub.unsubscribe();
   }

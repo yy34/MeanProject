@@ -40,13 +40,10 @@ export class PostCreateComponent implements OnInit {
             title: postData.title,
             content: postData.content,
           };
-          console.log('post2', this.post);
           this.postForm.setValue({
             title: this.post.title,
             content: this.post.content,
           });
-
-          console.log('post3', this.post);
         });
       } else {
         this.mode = pageMode.create;

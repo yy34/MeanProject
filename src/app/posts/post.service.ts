@@ -8,27 +8,36 @@ import { Post } from './post';
 @Injectable({ providedIn: 'root' })
 export class PostsService {
   private posts: Post[] = [];
-  private postsUpdated = new Subject<Post[]>();
+  private postsUpdated = new Subject<{ posts: Post[]; allPostCount: number }>();
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  getPosts() {
+  getPosts(postsPerPage: number, currentPage: number) {
+    const queryParams = `?pagesize=${postsPerPage}&page=${currentPage}`;
     this.http
-      .get<{ message: string; posts: any }>('http://localhost:3000/api/posts')
+      .get<{ message: string; posts: any; totalCount: number }>(
+        'http://localhost:3000/api/posts' + queryParams
+      )
       .pipe(
         map((postData) => {
-          return postData.posts.map((post: any) => {
-            return {
-              title: post.title,
-              content: post.content,
-              id: post._id,
-            };
-          });
+          return {
+            posts: postData.posts.map((post: any) => {
+              return {
+                id: post._id,
+                title: post.title,
+                content: post.content,
+              };
+            }),
+            totalCount: postData.totalCount,
+          };
         })
       )
-      .subscribe((transformedPosts) => {
-        this.posts = transformedPosts;
-        this.postsUpdated.next([...this.posts]);
+      .subscribe((transformedPostData) => {
+        this.posts = transformedPostData.posts;
+        this.postsUpdated.next({
+          posts: [...this.posts],
+          allPostCount: transformedPostData.totalCount,
+        });
       });
   }
 
@@ -37,9 +46,11 @@ export class PostsService {
   }
 
   getPost(id: string) {
-    return this.http.get<{ _id: string; title: string; content: string }>(
-      'http://localhost:3000/api/posts/' + id
-    );
+    return this.http.get<{
+      _id: string;
+      title: string;
+      content: string;
+    }>('http://localhost:3000/api/posts/' + id);
   }
 
   addPost(title: string, content: string) {
@@ -52,12 +63,8 @@ export class PostsService {
       .subscribe((responseData) => {
         post.id = responseData.postId;
         this.posts.push(post);
-        this.getPostsNavigate();
+        this.router.navigate(['/']);
       });
-  }
-  getPostsNavigate() {
-    this.postsUpdated.next([...this.posts]);
-    this.router.navigate(['/']);
   }
 
   updatePost(id: string, title: string, content: string) {
@@ -65,17 +72,11 @@ export class PostsService {
     this.http
       .put('http://localhost:3000/api/posts/' + id, post)
       .subscribe((response) => {
-        this.getPostsNavigate();
+        this.router.navigate(['/']);
       });
   }
 
   deletePost(postId: string) {
-    this.http
-      .delete('http://localhost:3000/api/posts/' + postId)
-      .subscribe(() => {
-        const updatedPosts = this.posts.filter((post) => post.id !== postId);
-        this.posts = updatedPosts;
-        this.postsUpdated.next([...this.posts]);
-      });
+    return this.http.delete('http://localhost:3000/api/posts/' + postId);
   }
 }

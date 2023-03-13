@@ -11,3 +11,12 @@ a {
 a:hover {
   text-decoration: underline;
 }
+header {
+  background-color: #3f51b5;
+  display: flex;
+  justify-content: center;
+}
+header mat-toolbar {
+  max-width: 85%;
+  padding: 0;
+}
