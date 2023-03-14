@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+form {
+  width: 100%;
+  max-width: 50%;
+}
+h2 {
+  text-align: center;
+  margin-block: 3rem;
+}
