@@ -15,11 +15,11 @@
         type="email"
         ngModel
         placeholder="Enter E-Mail"
-        #mail="ngModel"
+        #email="ngModel"
         required
         email
       />
-      <mat-error *ngIf="mail.invalid">Please enter a valid e-mail.</mat-error>
+      <mat-error *ngIf="email.invalid">Please enter a valid e-mail.</mat-error>
     </mat-form-field>
     <mat-form-field>
       <input
@@ -28,10 +28,12 @@
         type="password"
         ngModel
         placeholder="Enter Password"
-        #pass="ngModel"
+        #password="ngModel"
         required
       />
-      <mat-error *ngIf="pass.invalid">Please enter a valid password.</mat-error>
+      <mat-error *ngIf="password.invalid"
+        >Please enter a valid password.</mat-error
+      >
     </mat-form-field>
     <button mat-raised-button color="primary" type="submit">Sign Up</button>
   </mat-card>

@@ -10,7 +10,7 @@ mongoose
   .connect(
     "mongodb+srv://yy3474:" +
       process.env.MongoDB_PW +
-      "@cluster0.wnuno3b.mongodb.net/angular-db?retryWrites=true&w=majority"
+      "@cluster0.wnuno3b.mongodb.net/angular-db"
   )
   .then(() => {
     console.log("MongoDB connection succeeded...");
