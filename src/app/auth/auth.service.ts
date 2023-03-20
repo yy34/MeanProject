@@ -9,14 +9,9 @@ export class AuthService {
   private isAuth = false;
   private timerToken: any;
   private authStatusListener = new Subject<boolean>();
-  private userId: any;
-
   constructor(private http: HttpClient, private router: Router) {}
   getIsAuth() {
     return this.isAuth;
-  }
-  getUserId() {
-    return this.userId;
   }
   getAuthStatusListener() {
     return this.authStatusListener.asObservable();
@@ -32,7 +27,7 @@ export class AuthService {
   login(email: string, password: string) {
     const userAuth: AuthData = { email: email, password: password };
     this.http
-      .post<{ token: string; expiresIn: number; userId: string }>(
+      .post<{ token: string; expiresIn: number }>(
         'http://localhost:3000/api/user/login',
         userAuth
       )
@@ -42,13 +37,12 @@ export class AuthService {
         if (token) {
           this.setAuthTimer(response.expiresIn);
           this.isAuth = true;
-          this.userId = response.userId;
           this.authStatusListener.next(true);
           const dateNow = new Date();
           const endDate = new Date(
             dateNow.getTime() + response.expiresIn * 1000
           );
-          this.setStorage(token, endDate, this.userId);
+          this.setStorage(token, endDate);
           this.router.navigate(['/']);
         }
       });
@@ -61,7 +55,6 @@ export class AuthService {
       if (expiry > 0) {
         this.token = userAuthInfo.token;
         this.isAuth = true;
-        this.userId = userAuthInfo.userId;
         this.setAuthTimer(expiry / 1000);
         this.authStatusListener.next(true);
       }
@@ -73,7 +66,6 @@ export class AuthService {
     this.token = null;
     this.isAuth = false;
     this.authStatusListener.next(false);
-    this.userId = null;
     clearTimeout(this.timerToken);
     this.clearStorage();
     this.router.navigate(['/']);
@@ -83,26 +75,21 @@ export class AuthService {
       this.logout();
     }, time * 1000);
   }
-  private setStorage(token: string, endDate: Date, userId: string) {
+  private setStorage(token: string, endDate: Date) {
     localStorage.setItem('token', token);
     localStorage.setItem('endtime', endDate.toISOString());
-    localStorage.setItem('userId', userId);
   }
   private clearStorage() {
     localStorage.removeItem('token');
     localStorage.removeItem('endtime');
-    localStorage.removeItem('userId');
   }
   private getStorage() {
     const token = localStorage.getItem('token');
     const endTime = localStorage.getItem('endtime');
-    const userId = localStorage.getItem('userId');
-
     if (token && endTime) {
       return {
         token: token,
         endTime: new Date(endTime),
-        userId: userId,
       };
     } else {
       return;
