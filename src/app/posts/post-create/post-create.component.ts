@@ -16,6 +16,7 @@ export class PostCreateComponent implements OnInit {
   postId: any;
   loading: boolean = false;
   postForm!: FormGroup;
+
   constructor(
     public postsService: PostsService,
     public route: ActivatedRoute
