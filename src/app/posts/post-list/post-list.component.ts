@@ -21,7 +21,7 @@ export class PostListComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   totalPosts: number = 0;
   currentPage: number = 1;
-  tableSize: number = 25;
+  tableSize: number = 5;
   tableSizes: any = [5, 10, 25];
   userId: any;
 
